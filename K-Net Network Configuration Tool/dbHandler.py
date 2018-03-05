@@ -13,7 +13,7 @@ class Deviceinfo(Base):
     __tablename__ = 'deviceinfo'
     __table_args__ = {'sqlite_autoincrement': True}
 
-    id = Column(Integer, primary_key=True,autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     deviceType = Column(String(32))
     hostname = Column(String(32))
     ipAddress = Column(String(32))
@@ -21,13 +21,13 @@ class Deviceinfo(Base):
     password = Column(String(32))
     enable = Column(String(32))
 
+
 # initialize database connection:
 engine = create_engine(r'sqlite:///data/deviceinfo.db')
 # create DBSession:
 DBSession = sessionmaker(bind=engine)
 # create session instance:
 session = DBSession()
-
 
 
 def creat_item(_deviceinfo_tuple):
@@ -45,26 +45,24 @@ def creat_item(_deviceinfo_tuple):
     session.commit()
     session.close()
 
+
 def read_item():
     deviceinfo_list = session.query(Deviceinfo).all()
     session.close()
     return deviceinfo_list
 
-def update_item(*args):
-    pass
 
-def delete_item(_ipAddress):
-    session.query(Deviceinfo).filter(Deviceinfo.ipAddress==_ipAddress).delete()
+def update_item(_deviceinfo_tuple):
+    (_deviceType, _hostname, _ipAddress, _username, _password, _enable) = _deviceinfo_tuple
+    session.query(Deviceinfo).filter(Deviceinfo.ipAddress == _ipAddress).update({'hostname': _hostname,
+                                                                                 'username': _username,
+                                                                                 'password': _password,
+                                                                                 'enable': _enable})
     session.commit()
     session.close()
 
 
-# submit the trasaction
-devices = session.query(Deviceinfo).all()
-#print(type(devices[0]))
-
-session.query(Deviceinfo).filter_by(id='1').update({'password':'password'})
-session.commit()
-#print(devices[3].deviceType)
-# close session:
-session.close()
+def delete_item(_ipAddress):
+    session.query(Deviceinfo).filter(Deviceinfo.ipAddress == _ipAddress).delete()
+    session.commit()
+    session.close()

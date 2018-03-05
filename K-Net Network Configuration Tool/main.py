@@ -1,9 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
+__author__ = "Shawn Song"
+__copyright__ = "Copyright 2018"
+__credits__ = []
+__license__ = ""
+__version__ = "1.0.0"
+__maintainer__ = "Shawn Song"
+__email__ = "ssc1982@gmail.com"
+__status__ = "testing"
+
 from tkinter import *
-from tkinter import ttk
-from devicemgt import devicemgt
+from btm_frame import eventLog
+from center_left_frame import devicemgt
+from center_right_notebook import telnetTab_notebook
 
 
 
@@ -35,16 +46,18 @@ class App(Tk):
     # layout of the main window
     def layout(self):
         # create all of the main containers
-        top_frame = Frame(self, bg='cyan', height=30, pady=2, borderwidth=1, relief=SOLID)
+        top_frame = Frame(self, bg='light blue', height=30, pady=2, borderwidth=1, relief=SOLID)
 
         #add device management frame on the main window
         #center_left = Frame(self, bg='yellow', width=350, height=300, padx=2, pady=2, borderwidth=1, relief=SOLID, highlightcolor="red")
-        center_left = devicemgt(self, bg='yellow',padx=2, pady=2, borderwidth=1, relief=SOLID, highlightcolor='red' )
-        center_left.device_layout()
+        # initialize the infor log frame
+        btm_frame = eventLog(self, bg='light blue', height=170, pady=2, borderwidth=1, relief=SOLID)
 
-        center_right = Frame(self, bg='blue', width= 630, padx=2, pady=2, borderwidth=1, relief=SOLID, highlightcolor='red' )
-        btm_frame = Frame(self, bg='white',  height=170, pady=2, borderwidth=1, relief=SOLID)
-        btm_frame2 = Frame(self, bg='lavender', height=20, pady=2,borderwidth=1, relief=SOLID)
+        center_right_nb = telnetTab_notebook(self, btm_frame, width=630)
+
+        center_left_fr = devicemgt(self, btm_frame, center_right_nb, width=330,  bg='light blue',padx=2, pady=2, borderwidth=1, relief=SOLID, highlightcolor='red')
+
+        btm_frame2 = Frame(self, bg='light blue', height=20, pady=2,borderwidth=1, relief=SOLID)
 
         #layout all of the main containers
         self.grid_rowconfigure(1, weight=1)
@@ -52,16 +65,18 @@ class App(Tk):
         #
         top_frame.grid(row=0,columnspan=3, sticky="new")
         #layout of device management frame
-        center_left.grid(row=1,columnspan=2, sticky="nswe")
+        center_left_fr.grid(row=1,columnspan=2, sticky="nswe")
         #auto-adjust the size of the window
-        center_left.grid_rowconfigure(1, weight=1)
-        center_left.grid_columnconfigure(0, weight=1)
+        center_left_fr.grid_rowconfigure(1, weight=1)
+        center_left_fr.grid_columnconfigure(0, weight=1)
         #
-        center_right.grid(row=1, column=2, sticky="nswe")
-        center_right.grid_rowconfigure(1, weight=1)
-        center_right.grid_columnconfigure(0, weight=1)
+        center_right_nb.grid(row=1, column=2, sticky="nswe")
+        center_right_nb.grid_rowconfigure(1, weight=1)
+        center_right_nb.grid_columnconfigure(0, weight=1)
         #
         btm_frame.grid(row=2, columnspan=3, sticky="we")
+        btm_frame.grid_rowconfigure(1, weight=1)
+        btm_frame.grid_columnconfigure(0, weight=1)
         #
         btm_frame2.grid(row=3, columnspan=3, sticky="swe")
 
