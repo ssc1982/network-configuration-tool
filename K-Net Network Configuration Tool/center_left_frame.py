@@ -20,6 +20,7 @@ class devicemgt(Frame):
         self._center_right_nb = _center_right_nb
         self.device_layout()
 
+
     def device_layout(self):
 
         # define the tree columns and
@@ -46,7 +47,8 @@ class devicemgt(Frame):
         add_btn = Button(self, text='Add', command=self.add_device)
         edit_btn = Button(self, text='Edit', command=self.edit_device)
         delete_btn = Button(self, text='Delete', command=self.delete_device)
-        ping_btn = Button(self, text='Ping', command=lambda : self.thread_task(self.ping_device))
+        #ping_btn = Button(self, text='Ping', command=lambda : self.thread_task(self.ping_device))
+        ping_btn = Button(self, text='Ping', command=lambda: self.thread_task(self.ping_device))
         tracert_btn = Button(self, text='Traceroute', command=lambda : self.thread_task(self.tracert_device))
         telnet_btn = Button(self, text='Telnet', command=lambda : self.thread_task(self.telnet_device))
         # define grid layout of tree, scrollbar and buttons
@@ -125,7 +127,7 @@ class devicemgt(Frame):
 
     @show_warnning
     def edit_device(self):
-        if len(self.tree.selection()) > 1 :
+        if len(self.tree.selection()) > 1:
             showerror('More Items', 'You can\'t edit more than one device once !')
             return
         _deviceinfo_dict = self.tree.item(self.tree.selection())
@@ -162,7 +164,7 @@ class devicemgt(Frame):
         _thread.start()
         #_thread.join()
 
-    def selection_item(func):
+    def selection_items(func):
         def wrapper(self):
             for iid in self.tree.selection():
                 _devices_dict = self.tree.item(iid)
@@ -179,24 +181,24 @@ class devicemgt(Frame):
             if 0 == len(_devices_dict['values']):
                 showerror('Worng Item', 'This is not a device !')
                 return
-            process = subprocess.Popen(['ping', '-n', '1', '-l', '1470', _devices_dict['values'][0]],
+            process = subprocess.Popen(['ping', '-n', '5', '-l', '1470', _devices_dict['values'][0]],
                                         stdout = subprocess.PIPE, stderr = subprocess.PIPE )
             _output, _error = process.communicate()
             self._btm_frame.logging(_devices_dict['values'][0],  _output.decode('utf-8'))
+            print(_output.decode('utf-8'))
             #print(_error.decode('UTF-8'))
 
-    @show_warnning
+    #@show_warnning
     def telnet_device(self):
-        _ipAddress_list = []
+        _devices_list = []
         for iid in self.tree.selection():
             _devices_dict = self.tree.item(iid)
             if 0 == len(_devices_dict['values']):
                 showerror('Worng Item', 'This is not a device !')
                 return
-            _ipAddress_list.append(_devices_dict['values'][0])
-            print(_devices_dict)
-            self._btm_frame.logging(_devices_dict['values'][0], 'Connecting to IP Address: %s '% str(_devices_dict['values'][0]))
-        self._center_right_nb.telnetTab_layout(_devices_dict)
+            _devices_list.append(_devices_dict)
+            #self._btm_frame.logging(_devices_dict['values'][0], 'Sending request to IP Address: %s '% str(_devices_dict['values'][0]))
+        self._center_right_nb.telnetTab_layout(_devices_list)
 
 
     @show_warnning

@@ -51,9 +51,9 @@ class App(Tk):
         #add device management frame on the main window
         #center_left = Frame(self, bg='yellow', width=350, height=300, padx=2, pady=2, borderwidth=1, relief=SOLID, highlightcolor="red")
         # initialize the infor log frame
-        btm_frame = eventLog(self, bg='light blue', height=170, pady=2, borderwidth=1, relief=SOLID)
+        btm_frame = eventLog(self, bg='light blue', height=250, pady=2, borderwidth=1, relief=SOLID)
 
-        center_right_nb = telnetTab_notebook(self, btm_frame, width=630)
+        center_right_nb = telnetTab_notebook(self, btm_frame, width=630, takefocus=True)
 
         center_left_fr = devicemgt(self, btm_frame, center_right_nb, width=330,  bg='light blue',padx=2, pady=2, borderwidth=1, relief=SOLID, highlightcolor='red')
 

@@ -9,18 +9,21 @@ class deviceinfoInputDialog(Toplevel):
   def __init__(self, *_deviceinfo_tuple):
     super(deviceinfoInputDialog, self).__init__()
     self.title('Deviceinfo Input')
-    #self.grid_rowconfigure(0, weight=1)
+    #self.grid_rowconfigure(1, weight=1)
     self.grid_columnconfigure(0, weight=1)
-    self.geometry('300x300')
-    self.resizable(0,0)
+    self.geometry('300x180+300+200')
+    self.resizable(0, 0)
     self.inputDialog_layout(_deviceinfo_tuple)
+    self.protocol("WM_DELETE_WINDOW", self.cancel)
 
   def inputDialog_layout(self, _deviceinfo_tuple):
 
     #define labels and entries for all the components
     deviceType_label = Label(self, text='Deivce Type：', width=10, borderwidth=2, relief=SOLID)
-    self.deviceType =  StringVar()
-    deviceType_entry = Entry(self, textvariable=self.deviceType, width=20)
+    choices = {'router', 'switch'}
+    self.deviceType = StringVar()
+
+    deviceType_optionMenu = OptionMenu(self, self.deviceType, *choices)
 
     hostname_label = Label(self, text='Hostname：', width=10,  borderwidth=2, relief=SOLID)
     self.hostname = StringVar()
@@ -51,26 +54,27 @@ class deviceinfoInputDialog(Toplevel):
       self.password.set(_deviceinfo_dict['values'][2])
       self.enable.set(_deviceinfo_dict['values'][3])
       #device type and IP Address are not allowed to edit
-      deviceType_entry.config(state=DISABLED)
+      deviceType_optionMenu.config(state=DISABLED)
       ipAddress_entry.config(state=DISABLED)
 
     ok_btn = Button(self, text='OK', command=self.ok)
     cancel_btn = Button(self, text='Cancel', command=self.cancel)
+
     #define grid layout of all the components
     deviceType_label.grid(row=0, column=0, sticky='we')
-    deviceType_entry.grid(row=0, column=1, sticky='we')
-    hostname_label.grid(row=2, column=0, sticky='we')
-    hostname_entry.grid(row=2, column=1, sticky='we')
-    ipAddress_label.grid(row=4, column=0, sticky='we')
-    ipAddress_entry.grid(row=4, column=1, sticky='we')
-    username_label.grid(row=6, column=0, sticky='we')
-    username_entry.grid(row=6, column=1, sticky='we')
-    password_label.grid(row=8, column=0, sticky='we')
-    password_entry.grid(row=8, column=1, sticky='we')
-    enable_label.grid(row=10, column=0, sticky='we')
-    enable_entry.grid(row=10, column=1, sticky='we')
-    ok_btn.grid(row=12, column=0, sticky='we')
-    cancel_btn.grid(row=12, column=1, sticky='we')
+    deviceType_optionMenu.grid(row=0, column=1, sticky='we')
+    hostname_label.grid(row=1, column=0, sticky='we')
+    hostname_entry.grid(row=1, column=1, sticky='we')
+    ipAddress_label.grid(row=2, column=0, sticky='we')
+    ipAddress_entry.grid(row=2, column=1, sticky='we')
+    username_label.grid(row=3, column=0, sticky='we')
+    username_entry.grid(row=3, column=1, sticky='we')
+    password_label.grid(row=4, column=0, sticky='we')
+    password_entry.grid(row=4, column=1, sticky='we')
+    enable_label.grid(row=5, column=0, sticky='we')
+    enable_entry.grid(row=5, column=1, sticky='we')
+    ok_btn.grid(row=6, column=0, sticky='swe')
+    cancel_btn.grid(row=6, column=1, sticky='swe')
 
   def ok(self, deviceType_entry=None):
     self.deviceinfo_tuple = (self.deviceType.get(),
